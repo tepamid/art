@@ -54,7 +54,9 @@ var listMatch = /([-.\d]+\%?)\s*,\s*([-.\d]+\%?)\s*,\s*([-.\d]+\%?)\s*,?\s*([-.\
 var hexMatch = /^#?([a-f0-9]{1,2})([a-f0-9]{1,2})([a-f0-9]{1,2})([a-f0-9]{0,2})$/i;
 
 Color.parseRGB = function(color){
-	return map(color.match(listMatch).slice(1), function(bit, i){
+	var m = color.match(listMatch);
+	if (!m) throw new Error("Color.parseRGB: got null match for color: " + JSON.stringify(color));
+	return map(m.slice(1), function(bit, i){
 		if (bit) bit = parseFloat(bit) * (bit[bit.length - 1] == '%' ? 2.55 : 1);
 		return (i < 3) ? Math.round(((bit %= 256) < 0) ? bit + 256 : bit) : limit(((bit === '') ? 1 : Number(bit)), 0, 1);
 	});
